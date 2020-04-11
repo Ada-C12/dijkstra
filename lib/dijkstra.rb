@@ -1,5 +1,3 @@
-require "pry"
-
 def find_next_node(added, shortest_distances)
   distance = Float::INFINITY
   next_node = nil
@@ -31,11 +29,18 @@ def dijkstra(adjacency_matrix, start_node)
   # Assign shortest_distances[origin_node] to 0, so that it is picked first
   shortest_distances[start_node] = 0
 
+  answer = { start_node: start_node, parent_list: parent_list, shortest_distances: shortest_distances }
+
+
   # Loop the number of nodes - 1 times
   (num_nodes - 1).times do 
 
     # Select a node which is not in added and has a the smallest distance value called current_node.
     current_node = find_next_node(added, shortest_distances)
+
+    if current_node.nil?
+      return answer
+    end
 
     # Set current_node in added to true
     added[current_node] = true
@@ -44,7 +49,6 @@ def dijkstra(adjacency_matrix, start_node)
     # their current value and the distance to the current_node and the weight of the edge connecting them with current_node
     adjacency_matrix[current_node].each_with_index do |distance, index|
 
-      # binding.pry
       if distance > 0
         if parent_list[current_node]
           distance += shortest_distances[current_node]
@@ -57,8 +61,5 @@ def dijkstra(adjacency_matrix, start_node)
       end
     end
   end
-
-  answer = { start_node: start_node, parent_list: parent_list, shortest_distances: shortest_distances }
-
   return answer
 end
